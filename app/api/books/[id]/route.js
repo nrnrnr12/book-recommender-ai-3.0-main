@@ -1,60 +1,51 @@
-import mysql from 'mysql2/promise'
+import { NextResponse } from 'next/server';
+import pool from '@/lib/db'; // เรียกใช้ตัวเชื่อมต่อจากไฟล์กลาง (lib/db.js)
 
-const parseDbUrl = () => {
-  const url = new URL(process.env.DATABASE_URL)
-  return {
-    host: url.hostname,
-    user: url.username,
-    password: url.password,
-    database: url.pathname.replace('/', ''),
-    port: Number(url.port || 4000),
-    ssl: { rejectUnauthorized: true },
-  }
-}
-
+// 1. GET: ดึงข้อมูลหนังสือเล่มเดียว (ตาม ID)
 export async function GET(req, { params }) {
-  const db = await mysql.createConnection(parseDbUrl())
-  const { id } = params
+  try {
+    const { id } = params;
+    
+    // ใช้ pool.query แทนการสร้าง connection ใหม่
+    const [rows] = await pool.query('SELECT * FROM books WHERE id = ?', [id]);
 
-  const [rows] = await db.execute('SELECT * FROM books WHERE id = ?', [id])
-  await db.end()
+    if (rows.length === 0) {
+      return NextResponse.json({ error: 'Book not found' }, { status: 404 });
+    }
 
-  if (rows.length === 0) {
-    return new Response(JSON.stringify({ error: 'Not found' }), { status: 404 })
+    return NextResponse.json(rows[0]);
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  return Response.json(rows[0])
 }
 
-
+// 2. PUT: แก้ไขข้อมูลหนังสือ
 export async function PUT(req, { params }) {
-  const db = await mysql.createConnection(parseDbUrl())
-  const { id } = params
-  const { title, description, image_url } = await req.json()
-
   try {
-    await db.execute(
-      'UPDATE books SET title = ?, description = ?, image_url = ? WHERE id = ?',
-      [title, description, image_url, id]
-    )
-    await db.end()
-    return Response.json({ message: 'Book updated successfully' })
+    const { id } = params;
+    // รับค่า category เพิ่มเข้ามาด้วย เพื่อให้แก้ไขหมวดหมู่ได้
+    const { title, description, image_url, category } = await req.json();
+
+    // SQL อัปเดตข้อมูล (เพิ่ม category เข้าไป)
+    const sql = 'UPDATE books SET title = ?, description = ?, image_url = ?, category = ? WHERE id = ?';
+    
+    await pool.query(sql, [title, description, image_url, category, id]);
+
+    return NextResponse.json({ message: 'Book updated successfully' });
   } catch (err) {
-    return new Response(JSON.stringify({ error: 'Failed to update book' }), { status: 500 })
+    return NextResponse.json({ error: 'Failed to update book: ' + err.message }, { status: 500 });
   }
 }
 
-export async function DELETE(_req, { params }) {
-  const db = await mysql.createConnection(parseDbUrl())
-  const { id } = params
-
+// 3. DELETE: ลบหนังสือ
+export async function DELETE(req, { params }) {
   try {
-    await db.execute('DELETE FROM books WHERE id = ?', [id])
-    await db.end()
-    return Response.json({ message: 'Book deleted successfully' })
+    const { id } = params;
+
+    await pool.query('DELETE FROM books WHERE id = ?', [id]);
+
+    return NextResponse.json({ message: 'Book deleted successfully' });
   } catch (err) {
-    return new Response(JSON.stringify({ error: 'Failed to delete book' }), { status: 500 })
+    return NextResponse.json({ error: 'Failed to delete book: ' + err.message }, { status: 500 });
   }
 }
-
-

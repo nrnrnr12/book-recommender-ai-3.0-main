@@ -26,7 +26,7 @@ export default function CreateBookPage() {
   return (
     <div className={styles.container}>
       <div className={styles.wrapperBox + ' mt-6'}>
-        <h1 className={styles.title}>➕ Add New Book</h1>
+        <h1 className={styles.title}>Add New Book</h1>
         <form onSubmit={handleSubmit} className={styles.formVertical}>
           <label className={styles.inputLabel}>Book Title</label>
           <input

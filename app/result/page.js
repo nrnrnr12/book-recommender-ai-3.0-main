@@ -66,19 +66,6 @@ export default function ResultPage() {
 
   return (
     <div className={styles.container}>
-      {/* 🔝 Navbar */}
-      <nav className={homeStyles.navbar}>
-        <div className={homeStyles.logo}>
-          <a href="/">
-            <Image src="/images/logo.png" alt="logo" width={45} height={45} />
-          </a>
-        </div>
-        <div className={homeStyles.navRight}>
-          <a href="/book">Book</a>
-          <input type="text" placeholder="Search a Book" />
-        </div>
-      </nav>
-
       <h1 className={styles.title}>📚 Book Recommendations Just for You</h1>
 
       {loading ? (

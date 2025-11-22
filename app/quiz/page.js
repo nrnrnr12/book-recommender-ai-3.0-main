@@ -103,19 +103,6 @@ export default function QuizPage() {
 
   return (
     <div className={styles.container}>
-      {/* Top Navbar */}
-      <nav className={styles.navbar}>
-        <div className={styles.logo}>
-          <a href="/">
-            <Image src="/images/logo.png" alt="logo" width={45} height={45} />
-          </a>
-        </div>
-        <div className={styles.navRight}>
-          <a href="#">Book</a>
-          <input type="text" placeholder="Search a Book" />
-          <button className={styles.closeBtn}>✕</button>
-        </div>
-      </nav>
 
       {/* Quiz Box */}
       <div className={styles.quizWrapper}>

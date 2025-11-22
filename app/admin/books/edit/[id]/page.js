@@ -8,13 +8,28 @@ export default function EditBookPage() {
   const router = useRouter()
   const params = useParams()
   const bookId = params?.id
-  const [formData, setFormData] = useState({ title: '', description: '', image_url: '' })
+  
+  // 1. เพิ่ม category เข้าไปใน State เริ่มต้น
+  const [formData, setFormData] = useState({ 
+    title: '', 
+    description: '', 
+    image_url: '', 
+    category: '' 
+  })
 
   useEffect(() => {
     if (bookId) {
       fetch(`/api/books/${bookId}`)
         .then(res => res.json())
-        .then(data => setFormData(data))
+        .then(data => {
+            // 2. ป้องกันค่า null (ถ้า field ไหนใน DB ว่าง ให้ใส่ '' แทน)
+            setFormData({
+                title: data.title || '',
+                description: data.description || '',
+                image_url: data.image_url || '',
+                category: data.category || '' 
+            })
+        })
         .catch(err => alert('ไม่สามารถโหลดข้อมูลหนังสือได้'))
     }
   }, [bookId])
@@ -38,6 +53,8 @@ export default function EditBookPage() {
       <div className={styles.wrapperBox + ' mt-6'}>
         <h1 className={styles.title}>✏️ Edit Book</h1>
         <form onSubmit={handleSubmit} className={styles.formVertical}>
+          
+          {/* Title */}
           <label className={styles.inputLabel}>Book Title</label>
           <input
             type="text"
@@ -47,6 +64,7 @@ export default function EditBookPage() {
             required
           />
 
+          {/* Description */}
           <label className={styles.inputLabel}>Description</label>
           <textarea
             value={formData.description}
@@ -56,6 +74,7 @@ export default function EditBookPage() {
             required
           />
 
+          {/* Image URL */}
           <label className={styles.inputLabel}>Image URL</label>
           <input
             type="url"

@@ -1,92 +1,78 @@
-'use client'; // บอกว่าเป็น Client Component (เพราะต้องกดปุ่มได้)
+'use client'
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import styles from '../../styles/Result.module.css'
+import homeStyles from '../../styles/Home.module.css'
+import Image from 'next/image'
 
-export default function AdminPage() {
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function AdminBooksPage() {
+  const router = useRouter()
+  const [books, setBooks] = useState([])
 
-  // ฟังก์ชันดึงข้อมูลหนังสือเมื่อเปิดหน้าเว็บ
   useEffect(() => {
-    fetchBooks();
-  }, []);
+    fetchBooks()
+  }, [])
 
   const fetchBooks = async () => {
-    try {
-      const res = await fetch('/api/books'); // เรียกใช้ API ที่เราสร้างในข้อ 2
-      const data = await res.json();
-      setBooks(data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching books:', error);
-      setLoading(false);
-    }
-  };
+    const res = await fetch('/api/books')
+    const data = await res.json()
+    setBooks(data)
+  }
 
-  // ฟังก์ชันลบหนังสือ
   const handleDelete = async (id) => {
-    if (!confirm('ยืนยันที่จะลบหนังสือเล่มนี้?')) return;
+    const confirmDelete = confirm('คุณแน่ใจว่าต้องการลบหนังสือนี้?')
+    if (!confirmDelete) return
 
-    try {
-      const res = await fetch(`/api/books?id=${id}`, {
-        method: 'DELETE',
-      });
-      
-      if (res.ok) {
-        alert('ลบเรียบร้อย!');
-        fetchBooks(); // โหลดข้อมูลใหม่
-      } else {
-        alert('ลบไม่สำเร็จ');
-      }
-    } catch (error) {
-      console.error('Error deleting:', error);
-    }
-  };
-
-  if (loading) return <div className="p-10">กำลังโหลดข้อมูล...</div>;
+    const res = await fetch(`/api/books/${id}`, { method: 'DELETE' })
+    if (res.ok) fetchBooks()
+  }
 
   return (
-    <div style={{ padding: '40px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>Admin: จัดการหนังสือ</h1>
-      
-      {books.length === 0 ? (
-        <p>ไม่พบข้อมูลหนังสือใน Database</p>
-      ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ background: '#333', color: '#fff', textAlign: 'left' }}>
-              <th style={{ padding: '10px' }}>ID</th>
-              <th style={{ padding: '10px' }}>ชื่อหนังสือ</th>
-              <th style={{ padding: '10px' }}>ผู้แต่ง</th>
-              <th style={{ padding: '10px' }}>จัดการ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {books.map((book) => (
-              <tr key={book.id} style={{ borderBottom: '1px solid #ccc' }}>
-                <td style={{ padding: '10px' }}>{book.id}</td>
-                <td style={{ padding: '10px' }}>{book.title}</td>
-                <td style={{ padding: '10px' }}>{book.author}</td>
-                <td style={{ padding: '10px' }}>
-                  <button 
-                    onClick={() => handleDelete(book.id)}
-                    style={{
-                      background: 'red', 
-                      color: 'white', 
-                      border: 'none', 
-                      padding: '5px 10px', 
-                      cursor: 'pointer',
-                      borderRadius: '5px'
-                    }}
-                  >
-                    ลบ
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div className={styles.container}>
+      <div className={styles.wrapperBox + ' mt-6'}>
+        <div className={styles.adminHeader}>
+          <h1 className={styles.title}>Admin - Book Manager</h1>
+          <button
+            className={styles.btnAdd}
+            onClick={() => router.push('/admin/books/create')}
+          >
+            + Add Book
+          </button>
+        </div>
+
+        <div className={styles.grid}>
+          {books.map(book => (
+            <div key={book.id} className={styles.card}>
+              <img
+                  src={book.image_url && book.image_url !== "" ? book.image_url : 'https://via.placeholder.com/300x400?text=No+Image'}
+                  alt={book.title}
+                  className={styles.bookImage}
+                  onError={(e) => {
+                    e.target.onerror = null
+                    e.target.src = 'https://via.placeholder.com/300x400?text=No+Image'
+                  }}
+                />
+              <h3>{book.title}</h3>
+              <p>{book.description.slice(0, 200)}...</p>
+              <div className={styles.btnGroup}>
+                <button
+                  onClick={() => router.push(`/admin/books/edit/${book.id}`)}
+                  className={styles.btnEdit}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(book.id)}
+                  className={styles.btnDelete}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
-  );
+  )
 }
