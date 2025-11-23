@@ -7,8 +7,10 @@ import { FaBook, FaShoppingCart } from 'react-icons/fa';
 import { ethers } from 'ethers';
 import IERC20 from "@/abi/abitoken.json"; // ตรวจสอบว่าไฟล์นี้มีอยู่จริงที่ src/abi/ หรือ root/abi/
 import { Prompt } from 'next/font/google';
-import { useCart } from '@/context/CartContext'; 
+import { useCart } from '@/context/CartContext';
 import { usePathname } from 'next/navigation';
+import { GiBookshelf } from "react-icons/gi";
+
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -17,11 +19,11 @@ const prompt = Prompt({
 
 export default function Navbar() {
   const pathname = usePathname();
-  
+
   const [account, setAccount] = useState(null);
   const [ethBalance, setEthBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
-  const { cart } = useCart(); 
+  const { cart } = useCart();
 
   // ⚙️ ใส่เลข Contract Address ของเหรียญ NWN ตรงนี้
   const tokenAddress = "0x28F935a443189a57a3ec7C8c753Cd53D4aB72803";
@@ -94,38 +96,38 @@ export default function Navbar() {
   }
 
   return (
-    <nav 
-      className={prompt.className} 
+    <nav
+      className={prompt.className}
       style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '15px 40px',
-        position: 'sticky', 
-        top: 0, 
-        zIndex: 1000, 
-        backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-        backdropFilter: 'blur(10px)', 
-        borderBottom: '1px solid rgba(0,0,0,0.05)', 
-        boxShadow: '0 4px 30px rgba(0,0,0,0.03)', 
-    }}>
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(0,0,0,0.05)',
+        boxShadow: '0 4px 30px rgba(0,0,0,0.03)',
+      }}>
 
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Link href="/">
-          <Image 
-            src="/images/logo.png" 
-            alt="Logo" 
-            width={50} 
-            height={50} 
-            style={{ objectFit: 'contain', cursor: 'pointer' }} 
+          <Image
+            src="/images/logo.png"
+            alt="Logo"
+            width={50}
+            height={50}
+            style={{ objectFit: 'contain', cursor: 'pointer' }}
           />
         </Link>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
-        
+
         {!account ? (
-          <button 
+          <button
             onClick={connectWallet}
             style={{
               backgroundColor: '#333',
@@ -145,14 +147,14 @@ export default function Navbar() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
 
             {/* Balances Info */}
-            <div style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              fontSize: '0.95rem', 
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              fontSize: '0.95rem',
               fontWeight: '600',
-              color: '#000', 
+              color: '#000',
               gap: '4px',
-              textAlign: 'right' 
+              textAlign: 'right'
             }}>
               <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
                 ETH : {ethBalance}
@@ -169,11 +171,35 @@ export default function Navbar() {
               Buy Token
             </Link>
 
+            <Link href="/bookshelf" title="Bookshelf" style={{ fontSize: '1.6rem', color: '#000', display: 'flex', alignItems: 'center' }}>
+              <GiBookshelf />
+            </Link>
+
+            {cart.length > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-5px',
+                right: '-8px',
+                backgroundColor: '#000',
+                color: 'white',
+                fontSize: '0.7rem',
+                fontWeight: 'bold',
+                borderRadius: '50%',
+                width: '18px',
+                height: '18px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '2px solid white'
+              }}>
+                {cart.length}
+              </span>
+            )}
             {/* Icons ตะกร้าสินค้า พร้อมเลขแจ้งเตือน */}
             <Link href="/market" title="Marketplace" style={{ fontSize: '1.6rem', color: '#333', display: 'flex', transition: 'transform 0.2s', position: 'relative' }}>
-               <FaShoppingCart />
-               
-               {cart.length > 0 && (
+              <FaShoppingCart />
+
+              {cart.length > 0 && (
                 <span style={{
                   position: 'absolute',
                   top: '-5px',
@@ -192,14 +218,15 @@ export default function Navbar() {
                 }}>
                   {cart.length}
                 </span>
-               )}
+              )}
             </Link>
 
             <Link href="/book" title="book recommend" style={{ fontSize: '1.6rem', color: '#333' }}>
-               <FaBook /> 
+              <FaBook />
             </Link>
 
           </div>
+
         )}
 
       </div>
