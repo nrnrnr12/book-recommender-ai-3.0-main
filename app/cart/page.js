@@ -6,9 +6,13 @@ import { Prompt } from 'next/font/google';
 import Link from 'next/link';
 import { FaTrash } from 'react-icons/fa';
 import { ethers } from 'ethers';
+<<<<<<< HEAD
 import { useRouter } from 'next/navigation';
 import CheckoutModal from '@/components/CheckoutModal';
 import IERC20 from "@/abi/abitoken.json";
+=======
+import { getTokenContract } from '@/lib/token'; // ไฟล์ของคุณ
+>>>>>>> f7971ec499d15c5c8714b9bd0a2df893c85287dd
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -102,10 +106,10 @@ export default function CartPage() {
   return (
     <div className={prompt.className} style={{ minHeight: '100vh', padding: '60px 20px', backgroundColor: '#ffebd6' }}>
       <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '2rem',color: '#333333ff', fontWeight: '600', marginBottom: '20px' }}>ตะกร้าสินค้า</h1>
+        <h1 style={{ fontSize: '2rem', color: '#333333ff', fontWeight: '600', marginBottom: '20px' }}>ตะกร้าสินค้า</h1>
 
         {cart.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#333333ff' ,  fontWeight: '300', marginTop: '50px' }}>
+          <p style={{ textAlign: 'center', color: '#333333ff', fontWeight: '300', marginTop: '50px' }}>
             ยังไม่มีสินค้าภายในตะกร้า <Link href="/market" style={{ color: '#333333ff', fontWeight: '500' }}>ไปซื้อหนังสือ</Link>
           </p>
         ) : (
@@ -127,15 +131,19 @@ export default function CartPage() {
             </div>
 
             <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={{ fontWeight: '600',color: '#333333ff', fontSize: '1.2rem' }}>รวม: {totalPrice.toLocaleString()} NWN</p>
+              <p style={{ fontWeight: '600', color: '#333333ff', fontSize: '1.2rem' }}>รวม: {totalPrice.toLocaleString()} NWN</p>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button onClick={clearCart} style={{ padding: '10px 20px', borderRadius: '30px', background: '#D9534F', color: 'white', border: 'none', cursor: 'pointer' }}>
                   ล้างตะกร้า
                 </button>
+<<<<<<< HEAD
                 <button 
                     onClick={handleCheckoutClick}
                     style={{ padding: '10px 20px', borderRadius: '30px', background: '#333', color: 'white', border: 'none', cursor: 'pointer' }}
                 >
+=======
+                <button onClick={handleCheckout} style={{ padding: '10px 20px', borderRadius: '30px', background: '#333', color: 'white', border: 'none', cursor: 'pointer' }}>
+>>>>>>> f7971ec499d15c5c8714b9bd0a2df893c85287dd
                   ชำระเงิน
                 </button>
               </div>
