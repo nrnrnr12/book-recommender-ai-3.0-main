@@ -154,10 +154,17 @@ export default function Navbar() {
               textAlign: 'right' 
             }}>
               <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
+<<<<<<< HEAD
                 ETH : {ethBalance}
               </div>
               <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
                 Token : {tokenBalance} NWN
+=======
+                ETH Balance : {ethBalance}
+              </div>
+              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
+                Token Balance : {tokenBalance} NWN
+>>>>>>> 1009f24fd1347db11ca2181d022c720d79944f34
               </div>
               <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
                 Addr : {formatAddress(account)}
