@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaBook, FaShoppingCart } from 'react-icons/fa';
+import { ethers } from 'ethers';
+import IERC20 from "@/abi/abitoken.json";
 import { Prompt } from 'next/font/google';
 
 const prompt = Prompt({
@@ -13,11 +15,21 @@ const prompt = Prompt({
 
 export default function Navbar() {
   const [account, setAccount] = useState(null);
+  const [ethBalance, setEthBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
+
+  // 👉 ตั้งค่า token contract address ของคุณ
+  const tokenAddress = "0x30b32EE29623350E94206Ce0f83483E5cAF69416";
 
   useEffect(() => {
     checkWalletConnection();
   }, []);
+
+  useEffect(() => {
+    if (account) {
+      loadBalances();
+    }
+  }, [account]);
 
   const checkWalletConnection = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -27,13 +39,32 @@ export default function Navbar() {
           setAccount(accounts[0]);
         }
         
+        // Detect เมื่อสลับบัญชีใน MetaMask  
         window.ethereum.on('accountsChanged', (accounts) => {
-            setAccount(accounts.length > 0 ? accounts[0] : null);
+          setAccount(accounts.length > 0 ? accounts[0] : null);
         });
 
       } catch (error) {
         console.error("Error checking wallet:", error);
       }
+    }
+  };
+
+  const loadBalances = async () => {
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+
+      // ⭐ โหลดยอด ETH
+      const bal = await provider.getBalance(account);
+      setEthBalance(ethers.formatEther(bal));
+
+      // ⭐ โหลดยอด Token จาก Smart Contract
+      const token = new ethers.Contract(tokenAddress, IERC20, provider);
+      const tokenBal = await token.balanceOf(account);
+      setTokenBalance(ethers.formatEther(tokenBal));
+
+    } catch (err) {
+      console.error("Error loading balances:", err);
     }
   };
 
@@ -52,7 +83,7 @@ export default function Navbar() {
   };
 
   const formatAddress = (addr) => {
-      return addr ? `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}` : '';
+    return addr ? `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}` : '';
   };
 
   return (
@@ -63,32 +94,29 @@ export default function Navbar() {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '15px 40px',
-        
-        // --- ส่วนที่ทำให้เกาะติดด้านบน (Sticky) ---
         position: 'sticky', 
         top: 0, 
-        zIndex: 1000, // ตัวเลขสูงๆ เพื่อให้ลอยอยู่เหนือเนื้อหาอื่น
-        
-        // --- ตกแต่งให้สวยงาม ---
-        backgroundColor: 'rgba(255, 255, 255, 0.95)', // พื้นหลังขาวโปร่งแสงนิดๆ
-        backdropFilter: 'blur(10px)', // เอฟเฟกต์เบลอฉากหลัง (เหมือนกระจกฝ้า)
+        zIndex: 1000,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(0,0,0,0.05)', 
-        boxShadow: '0 4px 30px rgba(0,0,0,0.03)', // เงาจางๆ ด้านล่าง
+        boxShadow: '0 4px 30px rgba(0,0,0,0.03)',
     }}>
+
       {/* --- Logo --- */}
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Link href="/">
-            <Image 
-                src="/images/logo.png" 
-                alt="Logo" 
-                width={50} 
-                height={50} 
-                style={{ objectFit: 'contain', cursor: 'pointer' }} 
-            />
+          <Image 
+            src="/images/logo.png" 
+            alt="Logo" 
+            width={50} 
+            height={50} 
+            style={{ objectFit: 'contain', cursor: 'pointer' }} 
+          />
         </Link>
       </div>
 
-      {/* --- เมนูขวา --- */}
+      {/* --- Right Menu --- */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
         
         {!account ? (
@@ -110,43 +138,41 @@ export default function Navbar() {
           </button>
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
-            
-            {/* ส่วนแสดงผล Token และ Address */}
+
+            {/* Balance + Address */}
             <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                fontSize: '0.95rem', 
-                fontWeight: '600',
-                color: '#000', 
-                gap: '4px' 
+              display: 'flex', 
+              flexDirection: 'column', 
+              fontSize: '0.95rem', 
+              fontWeight: '600',
+              color: '#000', 
+              gap: '4px' 
             }}>
-                <div style={{ 
-                    borderBottom: '1px solid #000', 
-                    paddingBottom: '2px', 
-                    minWidth: '200px' 
-                }}>
-                    Token Balance : {tokenBalance} NWN
-                </div>
-                <div style={{ 
-                    borderBottom: '1px solid #000', 
-                    paddingBottom: '2px', 
-                    minWidth: '200px' 
-                }}>
-                    Address : {formatAddress(account)}
-                </div>
+
+              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '200px' }}>
+                ETH Balance : {ethBalance}
+              </div>
+
+              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '200px' }}>
+                Token Balance : {tokenBalance} NWN
+              </div>
+
+              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '200px' }}>
+                Address : {formatAddress(account)}
+              </div>
             </div>
 
-            {/* ปุ่ม Buy Token */}
+            {/* Buy Token Button */}
             <Link href="/buy-token" style={{ textDecoration: 'none', color: 'black', fontWeight: '600', fontSize: '1rem', borderBottom: '2px solid black' }}>
-                Buy Token
+              Buy Token
             </Link>
 
             {/* Icons */}
-            <Link href="/market" title="Marketplace" style={{ fontSize: '1.6rem', color: '#333', display: 'flex', transition: 'transform 0.2s' }}>
+            <Link href="/market" title="Marketplace" style={{ fontSize: '1.6rem', color: '#333' }}>
                <FaShoppingCart />
             </Link>
 
-            <Link href="/book" title="book recommend" style={{ fontSize: '1.6rem', color: '#333', display: 'flex', transition: 'transform 0.2s' }}>
+            <Link href="/book" title="book recommend" style={{ fontSize: '1.6rem', color: '#333' }}>
                <FaBook /> 
             </Link>
 
