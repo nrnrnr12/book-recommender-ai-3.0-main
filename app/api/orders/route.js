@@ -28,8 +28,9 @@ export async function POST(request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+// ... (ส่วน POST เหมือนเดิม)
 
-// 2. GET: ดึงหนังสือของฉัน (ทำงานหน้า Bookshelf)
+// 2. GET: ดึงหนังสือของฉัน
 export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
@@ -37,9 +38,10 @@ export async function GET(request) {
 
         if (!wallet) return NextResponse.json([]);
 
-        // Join ตาราง user_books กับ book_market เพื่อเอาข้อมูลหนังสือมาแสดง
+        // ⭐ แก้ตรงนี้: เพิ่ม ", user_books.purchase_date" เข้าไปใน SELECT
         const sql = `
-            SELECT book_market.* FROM book_market 
+            SELECT book_market.*, user_books.purchase_date 
+            FROM book_market 
             JOIN user_books ON book_market.id = user_books.book_id 
             WHERE user_books.wallet_address = ?
             ORDER BY user_books.purchase_date DESC

@@ -6,13 +6,9 @@ import { Prompt } from 'next/font/google';
 import Link from 'next/link';
 import { FaTrash } from 'react-icons/fa';
 import { ethers } from 'ethers';
-<<<<<<< HEAD
 import { useRouter } from 'next/navigation';
 import CheckoutModal from '@/components/CheckoutModal';
 import IERC20 from "@/abi/abitoken.json";
-=======
-import { getTokenContract } from '@/lib/token'; // ไฟล์ของคุณ
->>>>>>> f7971ec499d15c5c8714b9bd0a2df893c85287dd
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -136,14 +132,10 @@ export default function CartPage() {
                 <button onClick={clearCart} style={{ padding: '10px 20px', borderRadius: '30px', background: '#D9534F', color: 'white', border: 'none', cursor: 'pointer' }}>
                   ล้างตะกร้า
                 </button>
-<<<<<<< HEAD
                 <button 
                     onClick={handleCheckoutClick}
                     style={{ padding: '10px 20px', borderRadius: '30px', background: '#333', color: 'white', border: 'none', cursor: 'pointer' }}
                 >
-=======
-                <button onClick={handleCheckout} style={{ padding: '10px 20px', borderRadius: '30px', background: '#333', color: 'white', border: 'none', cursor: 'pointer' }}>
->>>>>>> f7971ec499d15c5c8714b9bd0a2df893c85287dd
                   ชำระเงิน
                 </button>
               </div>
