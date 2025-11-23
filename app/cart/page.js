@@ -4,6 +4,8 @@ import { useCart } from '@/context/CartContext';
 import { Prompt } from 'next/font/google';
 import Link from 'next/link';
 import { FaTrash } from 'react-icons/fa';
+import { ethers } from 'ethers';
+import { getTokenContract } from '@/lib/token'; // ไฟล์ของคุณ
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -15,13 +17,46 @@ export default function CartPage() {
 
   const totalPrice = cart.reduce((sum, book) => sum + parseFloat(book.price), 0);
 
+  const handleCheckout = async () => {
+    if (cart.length === 0) {
+      alert("ตะกร้าคุณว่าง ไม่มีสินค้าให้ชำระ");
+      return;
+    }
+
+    if (!window.ethereum) {
+      alert("โปรดติดตั้ง MetaMask");
+      return;
+    }
+
+    try {
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const tokenContract = getTokenContract(signer);
+
+      const RECEIVER_ADDRESS = "0x04eb3c4544090e5e70f1ce07a0f864c0048f517c"; // เปลี่ยนเป็น address ร้านของคุณ
+      const decimals = await tokenContract.decimals();
+      const amount = ethers.utils.parseUnits(totalPrice.toString(), decimals);
+
+      // ทำการโอน token NWN
+      const tx = await tokenContract.transfer(RECEIVER_ADDRESS, amount);
+      await tx.wait();
+
+      alert(`ชำระเงินเรียบร้อย! ยอดรวม: ${totalPrice.toLocaleString()} NWN`);
+      clearCart();
+    } catch (err) {
+      console.error(err);
+      alert("เกิดข้อผิดพลาดในการชำระเงิน");
+    }
+  };
+
   return (
     <div className={prompt.className} style={{ minHeight: '100vh', padding: '60px 20px', backgroundColor: '#ffebd6' }}>
       <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '2rem',color: '#333333ff', fontWeight: '600', marginBottom: '20px' }}>ตะกร้าสินค้า</h1>
+        <h1 style={{ fontSize: '2rem', color: '#333333ff', fontWeight: '600', marginBottom: '20px' }}>ตะกร้าสินค้า</h1>
 
         {cart.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#333333ff' ,  fontWeight: '300', marginTop: '50px' }}>
+          <p style={{ textAlign: 'center', color: '#333333ff', fontWeight: '300', marginTop: '50px' }}>
             ยังไม่มีสินค้าภายในตะกร้า <Link href="/market" style={{ color: '#333333ff', fontWeight: '500' }}>ไปซื้อหนังสือ</Link>
           </p>
         ) : (
@@ -43,12 +78,12 @@ export default function CartPage() {
             </div>
 
             <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={{ fontWeight: '600',color: '#333333ff', fontSize: '1.2rem' }}>รวม: {totalPrice.toLocaleString()} NWN</p>
+              <p style={{ fontWeight: '600', color: '#333333ff', fontSize: '1.2rem' }}>รวม: {totalPrice.toLocaleString()} NWN</p>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button onClick={clearCart} style={{ padding: '10px 20px', borderRadius: '30px', background: '#D9534F', color: 'white', border: 'none', cursor: 'pointer' }}>
                   ล้างตะกร้า
                 </button>
-                <button style={{ padding: '10px 20px', borderRadius: '30px', background: '#333', color: 'white', border: 'none', cursor: 'pointer' }}>
+                <button onClick={handleCheckout} style={{ padding: '10px 20px', borderRadius: '30px', background: '#333', color: 'white', border: 'none', cursor: 'pointer' }}>
                   ชำระเงิน
                 </button>
               </div>
