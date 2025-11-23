@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaBook, FaShoppingCart } from 'react-icons/fa';
 import { Prompt } from 'next/font/google';
+import { useCart } from '@/context/CartContext'; // เรียกใช้ Context
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -14,6 +15,7 @@ const prompt = Prompt({
 export default function Navbar() {
   const [account, setAccount] = useState(null);
   const [tokenBalance, setTokenBalance] = useState(0);
+  const { cart } = useCart(); // ดึงข้อมูลตะกร้ามา
 
   useEffect(() => {
     checkWalletConnection();
@@ -64,16 +66,16 @@ export default function Navbar() {
         alignItems: 'center',
         padding: '15px 40px',
         
-        // --- ส่วนที่ทำให้เกาะติดด้านบน (Sticky) ---
+        // --- Sticky Navbar ---
         position: 'sticky', 
         top: 0, 
-        zIndex: 1000, // ตัวเลขสูงๆ เพื่อให้ลอยอยู่เหนือเนื้อหาอื่น
+        zIndex: 1000, 
         
-        // --- ตกแต่งให้สวยงาม ---
-        backgroundColor: 'rgba(255, 255, 255, 0.95)', // พื้นหลังขาวโปร่งแสงนิดๆ
-        backdropFilter: 'blur(10px)', // เอฟเฟกต์เบลอฉากหลัง (เหมือนกระจกฝ้า)
+        // --- Styling ---
+        backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+        backdropFilter: 'blur(10px)', 
         borderBottom: '1px solid rgba(0,0,0,0.05)', 
-        boxShadow: '0 4px 30px rgba(0,0,0,0.03)', // เงาจางๆ ด้านล่าง
+        boxShadow: '0 4px 30px rgba(0,0,0,0.03)', 
     }}>
       {/* --- Logo --- */}
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -141,8 +143,8 @@ export default function Navbar() {
                 Buy Token
             </Link>
 
-            {/* Icons */}
-            <Link href="/market" title="Marketplace" style={{ fontSize: '1.6rem', color: '#333', display: 'flex', transition: 'transform 0.2s' }}>
+            {/* --- แก้ไขตรงนี้: Icons ตะกร้าสินค้า พร้อมเลขแจ้งเตือน --- */}
+            <Link href="/market" title="Marketplace" style={{ fontSize: '1.6rem', color: '#333', display: 'flex', transition: 'transform 0.2s', position: 'relative' }}>
                <FaShoppingCart />
             </Link>
 

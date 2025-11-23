@@ -1,6 +1,7 @@
 import './globals.css'
 import { Tinos } from 'next/font/google'
-import Navbar from '@/components/Navbar' 
+import Navbar from '@/components/Navbar'
+import { CartProvider } from '@/context/CartContext' // 1. Import เข้ามา
 
 const tinos = Tinos({
   subsets: ['latin'],
@@ -12,8 +13,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={tinos.variable}>
       <body>
-        <Navbar /> {/* <-- 2. วาง Navbar ไว้ตรงนี้ มันจะโผล่ทุกหน้า */}
-        {children}
+        <CartProvider> {/* 2. ครอบทั้ง Navbar และ Children */}
+          <Navbar />
+          {children}
+        </CartProvider>
       </body>
     </html>
   )

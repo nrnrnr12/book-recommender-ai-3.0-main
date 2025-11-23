@@ -45,7 +45,7 @@ export default function BookPage() {
     <div className={prompt.className} style={{ minHeight: '100vh', backgroundColor: '#ffebd6', padding: '60px 20px' }}>
       
       <div style={{ 
-        backgroundColor: 'white', 
+        backgroundColor: '#ffffffff', 
         borderRadius: '24px', 
         padding: '50px', 
         maxWidth: '1200px', 
@@ -75,7 +75,7 @@ export default function BookPage() {
               onMouseEnter={() => setHoveredId(book.id)}
               onMouseLeave={() => setHoveredId(null)}
               style={{ 
-                backgroundColor: 'white',
+                backgroundColor: '#ffffffff',
                 border: '1px solid #ccccccff', 
                 borderRadius: '16px', 
                 padding: '15px',

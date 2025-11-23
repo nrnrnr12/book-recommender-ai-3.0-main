@@ -100,7 +100,7 @@ export default function HomePage() {
               lineHeight: '1.2'
             }}>
               Discover Your <br />
-              <span style={{ color: '#D9534F' }}>Next Favorite Book</span> 📚
+              <span style={{ color: '#D9534F' }}>Next Favorite Book</span>
             </h1>
 
             <div style={{
