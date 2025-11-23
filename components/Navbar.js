@@ -5,9 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaBook, FaShoppingCart } from 'react-icons/fa';
 import { ethers } from 'ethers';
-import IERC20 from "@/abi/abitoken.json";
+import IERC20 from "@/abi/abitoken.json"; // ตรวจสอบว่าไฟล์นี้มีอยู่จริง
 import { Prompt } from 'next/font/google';
-import { useCart } from '@/context/CartContext'; // เรียกใช้ Context
+import { useCart } from '@/context/CartContext'; 
+import { usePathname } from 'next/navigation';
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -15,12 +16,15 @@ const prompt = Prompt({
 });
 
 export default function Navbar() {
+  // 1. เพิ่ม usePathname เพื่อเช็คหน้าปัจจุบัน
+  const pathname = usePathname();
+  
   const [account, setAccount] = useState(null);
   const [ethBalance, setEthBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
-  const { cart } = useCart(); // ดึงข้อมูลตะกร้ามา
+  const { cart } = useCart(); 
 
-  // 👉 ตั้งค่า token contract address ของคุณ
+  // Contract Address
   const tokenAddress = "0x30b32EE29623350E94206Ce0f83483E5cAF69416";
 
   useEffect(() => {
@@ -40,12 +44,9 @@ export default function Navbar() {
         if (accounts.length > 0) {
           setAccount(accounts[0]);
         }
-        
-        // Detect เมื่อสลับบัญชีใน MetaMask  
         window.ethereum.on('accountsChanged', (accounts) => {
           setAccount(accounts.length > 0 ? accounts[0] : null);
         });
-
       } catch (error) {
         console.error("Error checking wallet:", error);
       }
@@ -55,16 +56,14 @@ export default function Navbar() {
   const loadBalances = async () => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-
-      // ⭐ โหลดยอด ETH
+      // ETH Balance
       const bal = await provider.getBalance(account);
-      setEthBalance(ethers.formatEther(bal));
+      setEthBalance(parseFloat(ethers.formatEther(bal)).toFixed(4)); // ปัดเศษทศนิยมให้สวยงาม
 
-      // ⭐ โหลดยอด Token จาก Smart Contract
+      // Token Balance
       const token = new ethers.Contract(tokenAddress, IERC20, provider);
       const tokenBal = await token.balanceOf(account);
       setTokenBalance(ethers.formatEther(tokenBal));
-
     } catch (err) {
       console.error("Error loading balances:", err);
     }
@@ -88,6 +87,11 @@ export default function Navbar() {
     return addr ? `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}` : '';
   };
 
+  // 2. ซ่อน Navbar ถ้าอยู่หน้าอ่านหนังสือ (/read/...)
+  if (pathname.startsWith('/read')) {
+    return null;
+  }
+
   return (
     <nav 
       className={prompt.className} 
@@ -96,30 +100,15 @@ export default function Navbar() {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '15px 40px',
-<<<<<<< HEAD
-        
-        // --- Sticky Navbar ---
         position: 'sticky', 
         top: 0, 
         zIndex: 1000, 
-        
-        // --- Styling ---
         backgroundColor: 'rgba(255, 255, 255, 0.95)', 
         backdropFilter: 'blur(10px)', 
         borderBottom: '1px solid rgba(0,0,0,0.05)', 
         boxShadow: '0 4px 30px rgba(0,0,0,0.03)', 
-=======
-        position: 'sticky', 
-        top: 0, 
-        zIndex: 1000,
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(0,0,0,0.05)', 
-        boxShadow: '0 4px 30px rgba(0,0,0,0.03)',
->>>>>>> a469df31d318c5c66b22f3e1346b87d593dba3c0
     }}>
 
-      {/* --- Logo --- */}
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Link href="/">
           <Image 
@@ -132,7 +121,6 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* --- Right Menu --- */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
         
         {!account ? (
@@ -155,42 +143,56 @@ export default function Navbar() {
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
 
-            {/* Balance + Address */}
+            {/* Balances Info */}
             <div style={{ 
               display: 'flex', 
               flexDirection: 'column', 
               fontSize: '0.95rem', 
               fontWeight: '600',
               color: '#000', 
-              gap: '4px' 
+              gap: '4px',
+              textAlign: 'right' 
             }}>
-
-              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '200px' }}>
-                ETH Balance : {ethBalance}
+              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
+                ETH : {ethBalance}
               </div>
-
-              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '200px' }}>
-                Token Balance : {tokenBalance} NWN
+              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
+                Token : {tokenBalance} NWN
               </div>
-
-              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '200px' }}>
-                Address : {formatAddress(account)}
+              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
+                Addr : {formatAddress(account)}
               </div>
             </div>
 
-            {/* Buy Token Button */}
             <Link href="/buy-token" style={{ textDecoration: 'none', color: 'black', fontWeight: '600', fontSize: '1rem', borderBottom: '2px solid black' }}>
               Buy Token
             </Link>
 
-<<<<<<< HEAD
-            {/* --- แก้ไขตรงนี้: Icons ตะกร้าสินค้า พร้อมเลขแจ้งเตือน --- */}
+            {/* 3. แก้ไขส่วนตะกร้าสินค้า ให้มีเลขแจ้งเตือน (Badge) */}
             <Link href="/market" title="Marketplace" style={{ fontSize: '1.6rem', color: '#333', display: 'flex', transition: 'transform 0.2s', position: 'relative' }}>
-=======
-            {/* Icons */}
-            <Link href="/market" title="Marketplace" style={{ fontSize: '1.6rem', color: '#333' }}>
->>>>>>> a469df31d318c5c66b22f3e1346b87d593dba3c0
                <FaShoppingCart />
+               
+               {/* แสดงเลขถ้ามีของในตะกร้า */}
+               {cart.length > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '-5px',
+                  right: '-8px',
+                  backgroundColor: '#D9534F', // สีแดง
+                  color: 'white',
+                  fontSize: '0.7rem',
+                  fontWeight: 'bold',
+                  borderRadius: '50%',
+                  width: '18px',
+                  height: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '2px solid white'
+                }}>
+                  {cart.length}
+                </span>
+               )}
             </Link>
 
             <Link href="/book" title="book recommend" style={{ fontSize: '1.6rem', color: '#333' }}>
