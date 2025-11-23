@@ -9,6 +9,8 @@ import IERC20 from "@/abi/abitoken.json"; // ตรวจสอบว่าไ�
 import { Prompt } from 'next/font/google';
 import { useCart } from '@/context/CartContext'; 
 import { usePathname } from 'next/navigation';
+import { getTokenContract } from '@/lib/token'; // import helper
+
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -24,8 +26,6 @@ export default function Navbar() {
   const [tokenBalance, setTokenBalance] = useState(0);
   const { cart } = useCart(); 
 
-  // Contract Address
-  const tokenAddress = "0x30b32EE29623350E94206Ce0f83483E5cAF69416";
 
   useEffect(() => {
     checkWalletConnection();
@@ -54,20 +54,22 @@ export default function Navbar() {
   };
 
   const loadBalances = async () => {
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      // ETH Balance
-      const bal = await provider.getBalance(account);
-      setEthBalance(parseFloat(ethers.formatEther(bal)).toFixed(4)); // ปัดเศษทศนิยมให้สวยงาม
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
 
-      // Token Balance
-      const token = new ethers.Contract(tokenAddress, IERC20, provider);
-      const tokenBal = await token.balanceOf(account);
-      setTokenBalance(ethers.formatEther(tokenBal));
-    } catch (err) {
-      console.error("Error loading balances:", err);
-    }
-  };
+    // โหลดยอด ETH
+    const bal = await provider.getBalance(account);
+    setEthBalance(parseFloat(ethers.formatEther(bal)).toFixed(4));
+
+    // โหลดยอด Token ผ่าน helper
+    const token = getTokenContract(provider);
+    const tokenBal = await token.balanceOf(account);
+    setTokenBalance(ethers.formatEther(tokenBal));
+
+  } catch (err) {
+    console.error("Error loading balances:", err);
+  }
+};
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -154,17 +156,10 @@ export default function Navbar() {
               textAlign: 'right' 
             }}>
               <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
-<<<<<<< HEAD
                 ETH : {ethBalance}
               </div>
               <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
                 Token : {tokenBalance} NWN
-=======
-                ETH Balance : {ethBalance}
-              </div>
-              <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
-                Token Balance : {tokenBalance} NWN
->>>>>>> 1009f24fd1347db11ca2181d022c720d79944f34
               </div>
               <div style={{ borderBottom: '1px solid #000', paddingBottom: '2px', minWidth: '180px' }}>
                 Addr : {formatAddress(account)}
