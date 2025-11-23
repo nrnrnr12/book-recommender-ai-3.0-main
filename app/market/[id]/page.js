@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import { Prompt } from 'next/font/google';
 import { FaShoppingCart, FaStar, FaShoppingBag } from 'react-icons/fa';
 import { useCart } from '@/context/CartContext';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const prompt = Prompt({
@@ -17,6 +17,7 @@ export default function BookDetailPage() {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const { addToCart, cart } = useCart(); 
+  const router = useRouter();
 
   useEffect(() => {
     if (id) {
@@ -56,8 +57,10 @@ export default function BookDetailPage() {
              <div style={{ width: '100%', aspectRatio: '2/3', backgroundColor: '#ddd', borderRadius: '4px', overflow: 'hidden', boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }}>
                 <img src={book.cover_image} alt={book.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
              </div>
-             <button style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', backgroundColor: 'white', color: '#555', cursor: 'pointer', fontWeight: '500' }}>
-                📖 ทดลองอ่าน
+             <button 
+                onClick={() => router.push(`/read/${book.id}`)} // <-- เพิ่มบรรทัดนี้  
+                style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', backgroundColor: 'white', color: '#555', cursor: 'pointer', fontWeight: '500' }}>
+                ทดลองอ่าน
              </button>
           </div>
 
