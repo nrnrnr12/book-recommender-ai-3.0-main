@@ -5,12 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaBook, FaShoppingCart } from 'react-icons/fa';
 import { ethers } from 'ethers';
-import IERC20 from "@/abi/abitoken.json"; // ตรวจสอบว่าไฟล์นี้มีอยู่จริง
+import IERC20 from "@/abi/abitoken.json"; // ตรวจสอบว่าไฟล์นี้มีอยู่จริงที่ src/abi/ หรือ root/abi/
 import { Prompt } from 'next/font/google';
 import { useCart } from '@/context/CartContext'; 
 import { usePathname } from 'next/navigation';
-import { getTokenContract } from '@/lib/token'; // import helper
-
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -18,7 +16,6 @@ const prompt = Prompt({
 });
 
 export default function Navbar() {
-  // 1. เพิ่ม usePathname เพื่อเช็คหน้าปัจจุบัน
   const pathname = usePathname();
   
   const [account, setAccount] = useState(null);
@@ -26,6 +23,8 @@ export default function Navbar() {
   const [tokenBalance, setTokenBalance] = useState(0);
   const { cart } = useCart(); 
 
+  // ⚙️ ใส่เลข Contract Address ของเหรียญ NWN ตรงนี้
+  const tokenAddress = "0x28F935a443189a57a3ec7C8c753Cd53D4aB72803";
 
   useEffect(() => {
     checkWalletConnection();
@@ -54,22 +53,22 @@ export default function Navbar() {
   };
 
   const loadBalances = async () => {
-  try {
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
 
-    // โหลดยอด ETH
-    const bal = await provider.getBalance(account);
-    setEthBalance(parseFloat(ethers.formatEther(bal)).toFixed(4));
+      // 1. โหลดยอด ETH
+      const bal = await provider.getBalance(account);
+      setEthBalance(parseFloat(ethers.formatEther(bal)).toFixed(4));
 
-    // โหลดยอด Token ผ่าน helper
-    const token = getTokenContract(provider);
-    const tokenBal = await token.balanceOf(account);
-    setTokenBalance(ethers.formatEther(tokenBal));
+      // 2. โหลดยอด Token (เขียนตรงนี้เลย ไม่ต้อง import helper)
+      const tokenContract = new ethers.Contract(tokenAddress, IERC20, provider);
+      const tokenBal = await tokenContract.balanceOf(account);
+      setTokenBalance(ethers.formatEther(tokenBal));
 
-  } catch (err) {
-    console.error("Error loading balances:", err);
-  }
-};
+    } catch (err) {
+      console.error("Error loading balances:", err);
+    }
+  };
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -89,7 +88,7 @@ export default function Navbar() {
     return addr ? `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}` : '';
   };
 
-  // 2. ซ่อน Navbar ถ้าอยู่หน้าอ่านหนังสือ (/read/...)
+  // ซ่อน Navbar หน้าอ่านหนังสือ
   if (pathname.startsWith('/read')) {
     return null;
   }
@@ -170,17 +169,16 @@ export default function Navbar() {
               Buy Token
             </Link>
 
-            {/* 3. แก้ไขส่วนตะกร้าสินค้า ให้มีเลขแจ้งเตือน (Badge) */}
+            {/* Icons ตะกร้าสินค้า พร้อมเลขแจ้งเตือน */}
             <Link href="/market" title="Marketplace" style={{ fontSize: '1.6rem', color: '#333', display: 'flex', transition: 'transform 0.2s', position: 'relative' }}>
                <FaShoppingCart />
                
-               {/* แสดงเลขถ้ามีของในตะกร้า */}
                {cart.length > 0 && (
                 <span style={{
                   position: 'absolute',
                   top: '-5px',
                   right: '-8px',
-                  backgroundColor: '#D9534F', // สีแดง
+                  backgroundColor: '#D9534F',
                   color: 'white',
                   fontSize: '0.7rem',
                   fontWeight: 'bold',
