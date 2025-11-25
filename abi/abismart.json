@@ -1,24 +1,7 @@
 [
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "tokenAddress",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			},
 			{
 				"indexed": true,
 				"internalType": "address",
@@ -27,120 +10,102 @@
 			},
 			{
 				"indexed": true,
-				"internalType": "address",
-				"name": "seller",
-				"type": "address"
-			},
-			{
-				"indexed": false,
 				"internalType": "uint256",
-				"name": "price",
-				"type": "uint256"
-			}
-		],
-		"name": "BookBought",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "id",
+				"name": "bookId",
 				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "string",
-				"name": "title",
+				"name": "bookTitle",
 				"type": "string"
 			},
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "seller",
-				"type": "address"
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
 				"name": "price",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "paymentToken",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
 			}
 		],
-		"name": "BookListed",
+		"name": "SaleRecorded",
 		"type": "event"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "getSales",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "bookId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "bookTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "quantity",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "paymentToken",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct BookSalesStorage.Sale[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getSalesCount",
+		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"name": "books",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "title",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "author",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "translator",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "category",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "original_language",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "description",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "cover_image",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "ebook_file_url",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "seller",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "sold",
-				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -152,9 +117,29 @@
 				"internalType": "uint256",
 				"name": "bookId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "bookTitle",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "paymentToken",
+				"type": "address"
 			}
 		],
-		"name": "buyBook",
+		"name": "recordSale",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -162,90 +147,47 @@
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "title",
-				"type": "string"
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "sales",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "bookId",
+				"type": "uint256"
 			},
 			{
 				"internalType": "string",
-				"name": "author",
+				"name": "bookTitle",
 				"type": "string"
 			},
 			{
-				"internalType": "string",
-				"name": "translator",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "category",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "original_language",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "description",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "cover_image",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "ebook_file_url",
-				"type": "string"
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
 				"name": "price",
 				"type": "uint256"
-			}
-		],
-		"name": "listBook",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "nextBookId",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
+			},
 			{
 				"internalType": "address",
-				"name": "",
+				"name": "paymentToken",
 				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "token",
-		"outputs": [
+			},
 			{
-				"internalType": "contract IERC20",
-				"name": "",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

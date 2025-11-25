@@ -29,11 +29,9 @@ export default function CheckoutModal({
   return (
     <div className={`checkout-overlay ${prompt.className}`}>
       <div className="checkout-container">
-        
         <h2 className="checkout-title">ยืนยันการชำระเงิน</h2>
 
         <div className="checkout-box">
-
           <div className="checkout-row">
             <span><FaWallet className="inline-icon"/> กระเป๋าของคุณ:</span>
             <span className="checkout-value">{numBalance.toLocaleString()} NWN</span>
@@ -52,7 +50,6 @@ export default function CheckoutModal({
               {remaining.toLocaleString()} NWN
             </span>
           </div>
-
         </div>
 
         {isInsufficient ? (
@@ -84,7 +81,6 @@ export default function CheckoutModal({
         >
           ยกเลิก / กลับไปแก้ไข
         </button>
-
       </div>
     </div>
   );

@@ -62,6 +62,7 @@ export default function Navbar() {
       setEthBalance(parseFloat(ethers.formatEther(bal)).toFixed(4));
 
       // Token
+      
       const tokenContract = new ethers.Contract(tokenAddress, IERC20, provider);
       const tokenBal = await tokenContract.balanceOf(account);
       setTokenBalance(ethers.formatEther(tokenBal));
