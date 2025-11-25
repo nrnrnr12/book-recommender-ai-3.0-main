@@ -155,3 +155,11 @@
   cursor: not-allowed;
   color: #ccc;
 }
+
+.zerobook {
+  text-align: center;
+  color: #999;
+  margin-top: 50px;
+  font-weight: 300;
+}
+

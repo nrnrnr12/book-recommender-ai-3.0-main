@@ -59,7 +59,7 @@ export default function MarketPage() {
         </div>
 
         {books.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#999', marginTop: '50px', fontWeight: '300' }}>ยังไม่มีหนังสือวางขาย</p>
+          <p className='zerobook'>ยังไม่มีหนังสือวางขาย</p>
         ) : (
           <div className="booksGrid">
             {currentBooks.map((book) => (
