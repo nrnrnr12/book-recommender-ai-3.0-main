@@ -1,0 +1,77 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.rightMenu {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.connectBtn {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.walletInfo {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #000;
+  gap: 4px;
+  text-align: right;
+}
+
+.walletRow {
+  border-bottom: 1px solid #000;
+  padding-bottom: 2px;
+  min-width: 180px;
+}
+
+.iconWrapper {
+  display: flex;
+  position: relative;
+  font-size: 1.6rem;
+  color: #333;
+  transition: transform 0.2s;
+}
+
+.cartBadge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background-color: #D9534F;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}

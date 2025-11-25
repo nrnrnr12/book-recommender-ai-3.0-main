@@ -1,0 +1,66 @@
+.market-navbar {
+  position: sticky;
+  top: 85px;
+  z-index: 90;
+
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 40px;
+  max-width: 100%;
+  margin: 0 auto;
+
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.cart-button {
+  pointer-events: auto;
+  text-decoration: none;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 1px solid #eee;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.cart-button:hover {
+  transform: scale(1.05);
+}
+
+.cart-icon-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.cart-icon {
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #D9534F;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+.cart-text {
+  color: #333;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
