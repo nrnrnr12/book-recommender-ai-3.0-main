@@ -8,7 +8,7 @@
   z-index: 1000;
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
   box-shadow: 0 4px 30px rgba(0,0,0,0.03);
 }
 
@@ -74,4 +74,19 @@
   align-items: center;
   justify-content: center;
   border: 2px solid white;
+}
+
+.buyTokenLink {
+  background-color: #000000; /* สีปุ่มหลัก คุณเปลี่ยนเป็นสีที่ชอบได้ */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.buyTokenLink:hover {
+  background-color: #535353; /* สีเมื่อ hover */
 }

@@ -9,6 +9,7 @@ import { ethers } from 'ethers';
 import { useRouter } from 'next/navigation';
 import CheckoutModal from '@/components/CheckoutModal';
 import IERC20 from "@/abi/abitoken.json";
+import './CartPage.css';
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -99,60 +100,52 @@ export default function CartPage() {
     }
   };
 
-  return (
-    <div className={prompt.className} style={{ minHeight: '100vh', padding: '60px 20px', backgroundColor: '#ffebd6' }}>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '2rem', color: '#333333ff', fontWeight: '600', marginBottom: '20px' }}>ตะกร้าสินค้า</h1>
+ return (
+  <div className={prompt.className + ' cartPage'}>
+    <div className="cartContainer">
+      <h1 className="cartTitle">ตะกร้าสินค้า</h1>
 
-        {cart.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#333333ff', fontWeight: '300', marginTop: '50px' }}>
-            ยังไม่มีสินค้าภายในตะกร้า <Link href="/market" style={{ color: '#333333ff', fontWeight: '500' }}>ไปซื้อหนังสือ</Link>
-          </p>
-        ) : (
-          <>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              {cart.map((book) => (
-                <div key={book.id} style={{ display: 'flex', alignItems: 'center', background: 'white', padding: '10px', borderRadius: '12px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                  <img src={book.cover_image || 'https://via.placeholder.com/80x120'} alt={book.title} style={{ width: '80px', height: '120px', objectFit: 'cover', borderRadius: '8px', marginRight: '15px' }} />
-                  <div style={{ flexGrow: 1 }}>
-                    <h3 style={{ fontWeight: '500', fontSize: '1rem', color: '#333' }}>{book.title}</h3>
-                    <p style={{ fontSize: '0.85rem', color: '#999' }}>{book.author || 'Unknown Author'}</p>
-                    <p style={{ fontWeight: '600', color: '#D9534F' }}>{parseFloat(book.price).toLocaleString()} NWN</p>
-                  </div>
-                  <button onClick={() => removeFromCart(book.id)} style={{ color: '#D9534F', fontSize: '1.2rem', cursor: 'pointer', border: 'none', background: 'transparent' }} title="Remove from Cart">
-                    <FaTrash />
-                  </button>
+      {cart.length === 0 ? (
+        <p className="emptyCart">
+          ยังไม่มีสินค้าภายในตะกร้า <Link href="/market">ไปซื้อหนังสือ</Link>
+        </p>
+      ) : (
+        <>
+          <div className="cartList">
+            {cart.map((book) => (
+              <div key={book.id} className="cartItem">
+                <img src={book.cover_image || 'https://via.placeholder.com/80x120'} alt={book.title} />
+                <div className="cartItemContent">
+                  <h3>{book.title}</h3>
+                  <p className="author">{book.author || 'Unknown Author'}</p>
+                  <p className="price">{parseFloat(book.price).toLocaleString()} NWN</p>
                 </div>
-              ))}
-            </div>
-
-            <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={{ fontWeight: '600', color: '#333333ff', fontSize: '1.2rem' }}>รวม: {totalPrice.toLocaleString()} NWN</p>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button onClick={clearCart} style={{ padding: '10px 20px', borderRadius: '30px', background: '#D9534F', color: 'white', border: 'none', cursor: 'pointer' }}>
-                  ล้างตะกร้า
-                </button>
-                <button 
-                    onClick={handleCheckoutClick}
-                    style={{ padding: '10px 20px', borderRadius: '30px', background: '#333', color: 'white', border: 'none', cursor: 'pointer' }}
-                >
-                  ชำระเงิน
+                <button className="removeBtn" onClick={() => removeFromCart(book.id)} title="Remove from Cart">
+                  <FaTrash />
                 </button>
               </div>
+            ))}
+          </div>
+
+          <div className="cartSummary">
+            <p className="totalPrice">รวม: {totalPrice.toLocaleString()} NWN</p>
+            <div className="cartActions">
+              <button className="clearCartBtn" onClick={clearCart}>ล้างตะกร้า</button>
+              <button className="checkoutBtn" onClick={handleCheckoutClick}>ชำระเงิน</button>
             </div>
-          </>
-        )}
-      </div>
-
-      <CheckoutModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        total={totalPrice}
-        balance={userBalance}
-        onConfirm={handleConfirmPayment}
-        isProcessing={isProcessing}
-      />
-
+          </div>
+        </>
+      )}
     </div>
-  );
+
+    <CheckoutModal 
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      total={totalPrice}
+      balance={userBalance}
+      onConfirm={handleConfirmPayment}
+      isProcessing={isProcessing}
+    />
+  </div>
+);
 }

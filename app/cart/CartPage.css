@@ -1,0 +1,140 @@
+/* หน้า CartPage */
+.cartPage {
+  min-height: 100vh;
+  padding: 60px 20px;
+  background-color: #ffebd6;
+  font-family: inherit;
+}
+
+.cartContainer {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cartTitle {
+  font-size: 2rem;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* ข้อความตะกร้าเปล่า */
+.emptyCart {
+  text-align: center;
+  color: #333;
+  font-weight: 300;
+  margin-top: 50px;
+}
+
+.emptyCart a {
+  color: #333;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+/* รายการสินค้าในตะกร้า */
+.cartList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cartItem {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.cartItem img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 15px;
+}
+
+.cartItemContent {
+  flex-grow: 1;
+}
+
+.cartItemContent h3 {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+}
+
+.cartItemContent p {
+  margin: 2px 0;
+}
+
+.cartItemContent p.author {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.cartItemContent p.price {
+  font-weight: 600;
+  color: #D9534F;
+}
+
+/* ปุ่มลบสินค้า */
+.removeBtn {
+  color: #D9534F;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+/* Summary & Actions */
+.cartSummary {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.totalPrice {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+/* ปุ่มใน cart */
+.cartActions {
+  display: flex;
+  gap: 10px;
+}
+
+.clearCartBtn,
+.checkoutBtn {
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.2s;
+}
+
+.clearCartBtn {
+  background: #D9534F;
+  color: white;
+}
+
+.clearCartBtn:hover {
+  transform: scale(1.05);
+}
+
+.checkoutBtn {
+  background: #333;
+  color: white;
+}
+
+.checkoutBtn:hover {
+  transform: scale(1.05);
+}

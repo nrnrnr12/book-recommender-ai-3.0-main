@@ -1,0 +1,128 @@
+/* พื้นหลัง */
+.page-wrapper {
+  min-height: 100vh;
+  background-color: #ffebd6;
+  padding: 60px 20px;
+}
+
+/* กล่องขาวตรงกลาง */
+.content-container {
+  background: #fff;
+  border-radius: 24px;
+  padding: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+  min-height: 600px;
+}
+
+/* ส่วนหัว */
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.header p {
+  color: #999;
+  font-weight: 300;
+  margin-top: 5px;
+}
+
+/* กริดหนังสือ */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 40px 30px;
+}
+
+/* การ์ดหนังสือ */
+.book-card {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.book-card.hovered {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* รูป */
+.book-image {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  background: #f9f9f9;
+}
+
+.book-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ข้อมูลหนังสือ */
+.book-category {
+  font-size: 0.7rem;
+  color: #888;
+  background: #f5f5f5;
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.book-title {
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: #2d2d2d;
+  margin-bottom: 5px;
+  line-height: 1.4;
+  height: 46px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.book-author {
+  font-size: 0.85rem;
+  color: #999;
+  line-height: 1.5;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 60px;
+}
+
+.pagination button {
+  padding: 8px 20px;
+  background: #eee;
+  border: 1px solid #eee;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  color: #ccc;
+}

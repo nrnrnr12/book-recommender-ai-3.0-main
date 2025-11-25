@@ -10,7 +10,7 @@ import { Prompt } from 'next/font/google';
 import { useCart } from '@/context/CartContext';
 import { usePathname } from 'next/navigation';
 import { GiBookshelf } from "react-icons/gi";
-import "./Navbar.css";  
+import "./Navbar.css"; 
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],

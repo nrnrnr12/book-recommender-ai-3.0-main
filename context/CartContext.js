@@ -1,11 +1,13 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // เพิ่ม useRouter
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
+  const router = useRouter(); // ใช้ router เพื่อ navigate
 
   // โหลด cart จาก localStorage ตอนเริ่ม
   useEffect(() => {
@@ -31,6 +33,12 @@ export function CartProvider({ children }) {
     });
   };
 
+  // ฟังก์ชันเพิ่มของลงตะกร้าแล้วไปหน้า cart
+  const addandgocart = (book) => {
+    addToCart(book);       // ใส่หนังสือเข้า cart
+    router.push('/cart');  // ไปหน้า CartPage
+  };
+
   // ฟังก์ชันลบสินค้า
   const removeFromCart = (id) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
@@ -42,7 +50,7 @@ export function CartProvider({ children }) {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, addandgocart , removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );

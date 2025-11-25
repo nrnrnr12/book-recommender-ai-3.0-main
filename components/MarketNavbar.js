@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { FaShoppingBag } from 'react-icons/fa';
 import { useCart } from '@/context/CartContext';
 import { Prompt } from 'next/font/google';
-import './MarketNavbar.css';   // ← ดึง CSS เข้ามา
+import './MarketNavbar.css';   
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],

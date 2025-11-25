@@ -1,0 +1,157 @@
+.marketPage {
+  min-height: 100vh;
+  background-color: #ffebd6;
+  padding: 60px 20px;
+  font-family: inherit;
+}
+
+.marketContainer {
+  background-color: white;
+  border-radius: 24px;
+  padding: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+  min-height: 600px;
+  position: relative;
+}
+
+.marketHeader {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.marketHeader h1 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #2D2D2D;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.marketHeader p {
+  color: #888;
+  font-weight: 300;
+  margin-top: 5px;
+}
+
+.booksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 40px 30px;
+}
+
+.bookCard {
+  background-color: white;
+  border: 1px solid #ccccccff;
+  border-radius: 16px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.bookCard.hovered {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+
+.bookCover {
+  width: 100%;
+  aspect-ratio: 2/3;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+  position: relative;
+}
+
+.bookCover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bookInfo h3 {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 4px;
+  line-height: 1.4;
+  height: 44px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.bookInfo p {
+  font-size: 0.85rem;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.bookCardFooter {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bookPrice {
+  font-weight: 600;
+  color: #D9534F;
+  font-size: 1.1rem;
+}
+
+.bookPrice span {
+  font-size: 0.7rem;
+  color: #999;
+  font-weight: 400;
+}
+
+/* ปุ่ม Add to Cart */
+.addToCartBtn {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #eee;
+  background-color: transparent;
+  color: #ccc;
+}
+
+.addToCartBtn.hovered {
+  background-color: #333;
+  color: white;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 60px;
+}
+
+.pagination button {
+  padding: 8px 20px;
+  border-radius: 30px;
+  border: 1px solid #eee;
+  background: #eee;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  color: #ccc;
+}

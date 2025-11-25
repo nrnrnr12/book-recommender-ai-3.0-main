@@ -1,0 +1,171 @@
+/* Container หลัก */
+.buyTokenPage {
+  min-height: 100vh;
+  background-color: #FFF0E0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: inherit;
+}
+
+/* Card กลาง */
+.buyTokenCard {
+  background-color: white;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+/* Header */
+.buyTokenHeader {
+  margin-bottom: 30px;
+}
+
+.buyTokenLogoWrapper {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background-color: #FFFBF5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.buyTokenHeader h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.buyTokenHeader p {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* Rate info */
+.rateInfo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f5f5f5;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+/* Form */
+.buyTokenForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.buyTokenForm label {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 600;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding: 15px 15px 15px 50px;
+  border-radius: 12px;
+  border: 2px solid #eee;
+  font-size: 1.2rem;
+  font-weight: bold;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.inputWrapper.nwn input {
+  border-color: #28a745;
+  color: #333;
+  background-color: #fff;
+}
+
+.inputWrapper.nwn input:focus {
+  border-color: #218838;
+  box-shadow: 0 0 0 3px rgba(40,167,69,0.2);
+}
+
+.inputWrapper.eth input {
+  background-color: #fafafa;
+  color: #627EEA;
+}
+
+.inputWrapper.eth input:focus {
+  border-color: #627EEA;
+  box-shadow: 0 0 0 3px rgba(98,126,234,0.2);
+}
+
+.inputIcon {
+  position: absolute;
+  left: 15px;
+  top: 63%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputIcon.eth {
+  color: #627EEA;
+  font-size: 1.5rem;
+}
+
+/* Requires text */
+.requiresText {
+  display: flex;
+  justify-content: center;
+  color: #ccc;
+  font-size: 1rem;
+}
+
+/* Buy button */
+.buyTokenBtn {
+  width: 100%;
+  margin-top: 30px;
+  padding: 16px;
+  background-color: #2D2D2D;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.buyTokenBtn:hover:enabled {
+  transform: scale(1.02);
+  background-color: #1f1f1f;
+}
+
+.buyTokenBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Small note */
+.paymentNote {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: #999;
+}
