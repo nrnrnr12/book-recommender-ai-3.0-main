@@ -5,11 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaBook, FaShoppingCart } from 'react-icons/fa';
 import { ethers } from 'ethers';
-import IERC20 from "@/abi/abitoken.json";
 import { Prompt } from 'next/font/google';
 import { useCart } from '@/context/CartContext';
 import { usePathname } from 'next/navigation';
 import { GiBookshelf } from "react-icons/gi";
+import { getTokenContract } from "@/lib/token";   // ✅ ดึงจาก lib
 import "./Navbar.css"; 
 
 const prompt = Prompt({
@@ -24,8 +24,6 @@ export default function Navbar() {
   const [ethBalance, setEthBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
   const { cart } = useCart();
-
-  const tokenAddress = "0x28F935a443189a57a3ec7C8c753Cd53D4aB72803";
 
   useEffect(() => {
     checkWalletConnection();
@@ -61,9 +59,8 @@ export default function Navbar() {
       const bal = await provider.getBalance(account);
       setEthBalance(parseFloat(ethers.formatEther(bal)).toFixed(4));
 
-      // Token
-      
-      const tokenContract = new ethers.Contract(tokenAddress, IERC20, provider);
+      // Token balance (ใช้ lib เรียก contract)
+      const tokenContract = getTokenContract(provider);   // ✅ ใช้ lib
       const tokenBal = await tokenContract.balanceOf(account);
       setTokenBalance(ethers.formatEther(tokenBal));
 
@@ -128,10 +125,7 @@ export default function Navbar() {
               <div className="walletRow">Addr : {formatAddress(account)}</div>
             </div>
 
-            <Link
-              href="/buy-token"
-              className="buyTokenLink"
-            >
+            <Link href="/buy-token" className="buyTokenLink">
               Buy Token
             </Link>
 
@@ -143,11 +137,8 @@ export default function Navbar() {
             {/* Cart */}
             <Link href="/market" title="Marketplace" className="iconWrapper">
               <FaShoppingCart />
-
               {cart.length > 0 && (
-                <span className="cartBadge">
-                  {cart.length}
-                </span>
+                <span className="cartBadge">{cart.length}</span>
               )}
             </Link>
 

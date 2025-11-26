@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useCart } from '@/context/CartContext';
-import { Prompt } from 'next/font/google';
+import { useState } from 'react';
 import Link from 'next/link';
 import { FaTrash } from 'react-icons/fa';
 import { ethers } from 'ethers';
+import { Prompt } from 'next/font/google';
+import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import CheckoutModal from '@/components/CheckoutModal';
-import IERC20 from "@/abi/abitoken.json";
-import { getMarketplaceContract } from "@/lib/marketplace";
+
+import { getMarketplaceContract } from '@/lib/marketplace';
+import { getTokenContract } from '@/lib/token';  // ใช้อันนี้แทนทุกที่
 import './CartPage.css';
 
 const prompt = Prompt({
@@ -20,96 +21,110 @@ const prompt = Prompt({
 export default function CartPage() {
   const { cart, removeFromCart, clearCart } = useCart();
   const router = useRouter();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userBalance, setUserBalance] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentAccount, setCurrentAccount] = useState(null);
 
-  const tokenAddress = "0x28F935a443189a57a3ec7C8c753Cd53D4aB72803"; 
-  const merchantAddress = "0x183f72fb6a3daa6e1e7bdfa040e377c8dcad97ed"; 
+  // ❗ เหลือแค่ merchant อย่างเดียว เพราะ token address อยู่ใน lib แล้ว
+  const merchantAddress = "0x183f72fb6a3daa6e1e7bdfa040e377c8dcad97ed";
 
   const totalPrice = cart.reduce((sum, book) => sum + parseFloat(book.price), 0);
 
-  // ดึงยอดเงินผู้ใช้
+  // 📌 ดึงยอดเงินผู้ใช้
   const fetchBalance = async () => {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await provider.listAccounts();
-        if (accounts.length > 0) {
-          const accountAddr = accounts[0].address;
-          setCurrentAccount(accountAddr);
-          const token = new ethers.Contract(tokenAddress, IERC20, provider);
-          const bal = await token.balanceOf(accountAddr);
-          setUserBalance(ethers.formatEther(bal));
-        }
-      } catch (error) {
-        console.error("Check balance error:", error);
+    if (!window.ethereum) return;
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await provider.listAccounts();
+
+      if (accounts.length > 0) {
+        const accountAddr = accounts[0].address;
+        setCurrentAccount(accountAddr);
+
+        const token = getTokenContract(provider); // ⬅ ใช้ lib
+        const bal = await token.balanceOf(accountAddr);
+
+        setUserBalance(ethers.formatEther(bal));
       }
+    } catch (err) {
+      console.error("Check balance error:", err);
     }
   };
 
+  // 📌 เปิด modal พร้อมดึง balance
   const handleCheckoutClick = async () => {
     await fetchBalance();
     setIsModalOpen(true);
   };
 
+  // 📌 กดปุ่มชำระเงิน
   const handleConfirmPayment = async () => {
     setIsProcessing(true);
+
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
 
-      // 1️⃣ โอนเหรียญ NWN ไป Merchant
-      const tokenContract = new ethers.Contract(tokenAddress, IERC20, signer);
-      const txToken = await tokenContract.transfer(
+      // 1️⃣ โอนเหรียญ NWN ไปให้ร้านค้า
+      const token = getTokenContract(signer);  // ⬅ ใช้ lib แทนการ new contract
+      const tx1 = await token.transfer(
         merchantAddress,
         ethers.parseEther(totalPrice.toString())
       );
-      await txToken.wait();
+      await tx1.wait();
 
-      // 2️⃣ บันทึกแต่ละหนังสือลง Smart Contract
+      // 2️⃣ บันทึกข้อมูลหนังสือใน smart contract
       const marketplace = getMarketplaceContract(signer);
+
       for (let book of cart) {
         const txSale = await marketplace.recordSale(
           book.id,
           book.title,
           1,
           ethers.parseEther(book.price.toString()),
-          tokenAddress
+          token.target   // ⬅ address ของ token จะมาจาก contract เอง
         );
         await txSale.wait();
       }
 
-      alert("ชำระเงินสำเร็จ! หนังสือถูกเพิ่มเข้าชั้นหนังสือแล้ว 🎉");
+      alert("ชำระเงินสำเร็จ 🎉");
       clearCart();
       setIsModalOpen(false);
       router.push('/bookshelf');
-    } catch (error) {
-      console.error(error);
-      alert("การชำระเงินล้มเหลว: " + (error.reason || error.message));
+
+    } catch (err) {
+      console.error(err);
+      alert("เกิดข้อผิดพลาด: " + (err.reason || err.message));
     } finally {
       setIsProcessing(false);
     }
   };
 
+  // ⛩ UI -----------------------------------------------------
   return (
     <div className={prompt.className + ' cartPage'}>
       <div className="cartContainer">
         <h1 className="cartTitle">ตะกร้าสินค้า</h1>
+
         {cart.length === 0 ? (
           <p className="emptyCart">
-            ยังไม่มีสินค้าภายในตะกร้า <Link href="/market">ไปซื้อหนังสือ</Link>
+            ยังไม่มีสินค้าในตะกร้า <Link href="/market">ไปเลือกซื้อเลย</Link>
           </p>
         ) : (
           <>
             <div className="cartList">
               {cart.map((book) => (
                 <div key={book.id} className="cartItem">
-                  <img src={book.cover_image || 'https://via.placeholder.com/80x120'} alt={book.title} />
+                  <img
+                    src={book.cover_image || 'https://via.placeholder.com/80x120'}
+                    alt={book.title}
+                  />
                   <div className="cartItemContent">
                     <h3>{book.title}</h3>
-                    <p className="author">{book.author || 'Unknown Author'}</p>
+                    <p className="author">{book.author || 'Unknown'}</p>
                     <p className="price">{parseFloat(book.price).toLocaleString()} NWN</p>
                   </div>
                   <button className="removeBtn" onClick={() => removeFromCart(book.id)}>
