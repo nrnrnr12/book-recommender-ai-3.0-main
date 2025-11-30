@@ -90,6 +90,18 @@ export default function CartPage() {
         await txSale.wait();
       }
 
+       // 2. บันทึกลง Database
+      const saveRes = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            wallet_address: currentAccount, 
+            items: cart
+        })
+      });
+
+      if (!saveRes.ok) throw new Error("บันทึกข้อมูลไม่สำเร็จ");
+
       alert("ชำระเงินสำเร็จ 🎉");
       clearCart();
       setIsModalOpen(false);
